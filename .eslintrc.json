@@ -1,0 +1,68 @@
+{
+    "extends": [
+        "plugin:react/recommended",
+        "plugin:import/typescript"
+    ],
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "settings": {
+        "import/resolver": {
+          "node": {
+            "paths": ["src"]
+          }
+        }
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "import/extensions": "off",
+        "react/jsx-filename-extension": [0, { "extensions": [".tsx", ".ts"] }],
+        "react/jsx-props-no-spreading": "off",
+        "react/require-default-props": "off",
+        "react/jsx-indent-props": [2, 4],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": [
+            "error"
+        ],
+        "max-len": [
+            "error",
+            {
+                "code": 120
+            }
+        ],
+        "indent": ["error", 4],
+        "quotes": ["error", "single"],
+        "no-alert": "off",
+        "class-methods-use-this": "off",
+        "comma-dangle": 1,
+        "eol-last": ["error", "always"],
+        "react/jsx-indent": [2, 4],
+        "arrow-body-style": ["error", "as-needed"],
+        "arrow-parens": ["error", "as-needed"],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error"],
+        "jsx-a11y/label-has-associated-control": [ 2, {
+            "labelAttributes": ["label"],
+            "controlComponents": ["Input"]
+        }],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
+        "import/prefer-default-export": "off"
+    },
+    "globals": {
+        "React": true,
+        "JSX": true
+    }
+}
