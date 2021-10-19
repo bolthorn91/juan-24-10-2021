@@ -1,3 +1,4 @@
+import { ITableRow } from 'domain/types/types';
 import './Table.scss'
 
 interface IProps {
@@ -8,18 +9,40 @@ interface IProps {
 export const Table = ({
     title,
     orders
-}: IProps) => (
-    <div className="table">
-        <h1>{title}</h1>
-        {orders.map((order, index) => (
-            <div 
-                className="table__row"
-                key={index}
-            >
-                {order.map(value => (
-                    <p key={value}>{value}</p>
-                ))}
-            </div>
-        ))}
-    </div>
-)
+}: IProps) => {
+    let lastRow: ITableRow = {price: 0, size: 0, total: 0};
+
+    const getTableRows = (_orders: number[][]) => _orders
+        .reduce((acc, current, index) => {
+            const currentRow: ITableRow = {
+                price: current[0],
+                size: current[1],
+                total: current[1] + lastRow.total
+            };
+            if (acc.find(row => row.price === current[0])) {
+                acc[acc.findIndex(row => row.price === current[0])] = currentRow;
+                return [...acc];
+            }
+            return index === 0
+                ? [currentRow]
+                : [...acc, currentRow];
+        }, [lastRow]);
+
+    const tableRows: ITableRow[] = getTableRows(orders)
+
+    return (
+        <div className="table">
+            <h1>{title}</h1>
+            {tableRows.map((row, index) => (
+                <div 
+                    className="table__row"
+                    key={index}
+                >
+                    <p>{row.price}</p>
+                    <p>{row.size}</p>
+                    <p>{row.total}</p>
+                </div>
+            ))}
+        </div>
+    )
+}
