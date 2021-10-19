@@ -8,7 +8,7 @@ export const App = () => {
 
     useEffect(() => {
         getOrderbookSocket(setOrderbook)
-    }, [])
+    }, [orderbook])
 
     return (
         <>
