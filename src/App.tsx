@@ -13,7 +13,39 @@ export const App = () => {
     return (
         <>
             {orderbook && (
-                <h1>Order book</h1>
+                <div className="app">
+                    <h1>Order book</h1>
+                    <div className="app__tables-container">
+                        <div className="app__table">
+                            <h1>Bids</h1>
+                            {orderbook.bids.map((order, index) => (
+                                <div 
+                                    className="app__table-row"
+                                    key={index}
+                                >
+                                    {order.map(value => (
+                                        <p key={value}>{value}</p>
+                                    ))}
+
+                                </div>
+                            ))}
+                        </div>
+                        <div className="app__table">
+                            <h1>Asks</h1>
+                            {orderbook.asks.map((order, index) => (
+                                <div 
+                                    className="app__table-row"
+                                    key={index}
+                                >
+                                    {order.map(value => (
+                                        <p key={value}>{value}</p>
+                                    ))}
+
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             )}
         </>
     );
