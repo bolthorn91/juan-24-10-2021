@@ -1,9 +1,31 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, waitFor } from '@testing-library/react';
+import { App } from './App';
+import { getOrderbookSocket as getOrderbookSocketMocked } from 'domain/orders/getOrderbookSocket';
 
-test('renders learn react link', () => {
-    render(<App />);
-    const linkElement = screen.getByText(/learn react/i);
-    expect(linkElement).toBeInTheDocument();
-});
+const mockedOrderbook = {
+    bids: [['::price1::', '::size2::']],
+    asks: [['::price2::', '::size2::']]
+};
+jest.mock('domain/orders/getOrderbookSocket', () => ({
+    getOrderbookSocket: jest.fn()
+}))
+
+afterAll(() => {
+    jest.clearAllMocks()
+})
+
+describe('App', () => {
+    test('should render order book title', async() => {
+        (getOrderbookSocketMocked as jest.Mock)
+            .mockImplementation(setOrderbook => setOrderbook(mockedOrderbook))
+        const { getByText } = render(<App />);
+        await waitFor(() => {
+            getByText(/Order book/)
+        })
+        expect(getByText(/Order book/)).toBeInTheDocument();
+        expect(getOrderbookSocketMocked).toBeCalledTimes(2);
+    });
+})
+
+
