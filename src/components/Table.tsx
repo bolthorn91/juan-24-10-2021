@@ -10,6 +10,7 @@ export const Table = ({
     title,
     orders
 }: IProps) => {
+    const headers = ['PRICE', 'SIZE', 'TOTAL'];
     let lastRow: ITableRow = {price: 0, size: 0, total: 0};
 
     const getTableRows = (_orders: number[][]) => _orders
@@ -33,6 +34,11 @@ export const Table = ({
     return (
         <div className="table">
             <h1>{title}</h1>
+            <div className="table__header">
+                {headers.map(header => (
+                    <h2 key={header}>{header}</h2>
+                ))}
+            </div>
             {tableRows.map((row, index) => (
                 <div 
                     className="table__row"
