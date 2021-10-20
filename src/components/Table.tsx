@@ -1,3 +1,4 @@
+import { getTableRows } from 'adapters/getTableRows';
 import { ITableRow } from 'domain/types/types';
 import './Table.scss'
 
@@ -11,25 +12,7 @@ export const Table = ({
     orders
 }: IProps) => {
     const headers = ['PRICE', 'SIZE', 'TOTAL'];
-    let lastRow: ITableRow = {price: 0, size: 0, total: 0};
-
-    const getTableRows = (_orders: number[][]) => _orders
-        .reduce((acc, current, index) => {
-            const currentRow: ITableRow = {
-                price: current[0],
-                size: current[1],
-                total: current[1] + lastRow.total
-            };
-            if (acc.find(row => row.price === current[0])) {
-                acc[acc.findIndex(row => row.price === current[0])] = currentRow;
-                return [...acc];
-            }
-            return index === 0
-                ? [currentRow]
-                : [...acc, currentRow];
-        }, [lastRow]);
-
-    const tableRows: ITableRow[] = getTableRows(orders)
+    const tableRows: ITableRow[] = getTableRows(orders);
 
     return (
         <div className="table">

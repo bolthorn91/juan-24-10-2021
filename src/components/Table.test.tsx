@@ -14,7 +14,7 @@ describe('Table', () => {
         expect(getByText(/10/)).toBeInTheDocument()
         expect(getAllByText(/2/).length).toBe(2)
         expect(getByText(/30/)).toBeInTheDocument()
-        expect(getAllByText(/4/).length).toBe(2)
+        expect(getAllByText(/4/).length).toBe(1)
     })
     
 })
