@@ -21,4 +21,8 @@ export interface ISocketDataMessage {
     event?: string;
 }
 
+export interface ISpreadObject {
+    total: number,
+    percentage: number,
+}
 
