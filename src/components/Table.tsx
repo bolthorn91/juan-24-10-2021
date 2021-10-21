@@ -1,18 +1,16 @@
-import { getTableRows } from 'adapters/getTableRows';
 import { ITableRow } from 'domain/types/types';
 import './Table.scss'
 
 interface IProps {
     title: string;
-    orders: number[][];
+    rows: ITableRow[]
 }
 
 export const Table = ({
     title,
-    orders
+    rows
 }: IProps) => {
     const headers = ['PRICE', 'SIZE', 'TOTAL'];
-    const tableRows: ITableRow[] = getTableRows(orders);
 
     return (
         <div className="table">
@@ -22,7 +20,7 @@ export const Table = ({
                     <h2 key={header}>{header}</h2>
                 ))}
             </div>
-            {tableRows.map((row, index) => (
+            {rows.map((row, index) => (
                 <div 
                     className="table__row"
                     key={index}
