@@ -3,6 +3,7 @@ import { getOrderbookSocket } from './domain/orders/getOrderbookSocket';
 import { IOrderbook, ITableRow } from 'domain/types/types';
 import { Table } from 'components/Table';
 import { getTableRows } from 'adapters/getTableRows';
+import { calculateSpread } from 'adapters/calculateSpread';
 import './App.scss';
 
 export const App = () => {
@@ -10,18 +11,6 @@ export const App = () => {
     const [bids, setBids] = useState<ITableRow[]>([])
     const [asks, setAsks] = useState<ITableRow[]>([])
     const [spread, setSpread] = useState<{total: number, percentage: number}>({total: 0, percentage: 0});
-
-
-    const calculateSpread = (bidPrice: number, askPrice: number) => {
-        const _spread = askPrice - bidPrice
-        const spreadDecimal = _spread * 100;
-        const spreadTotal = spreadDecimal * 10
-        const spreadPercentage = +(spreadDecimal / askPrice).toFixed(2)
-        return {
-            total: spreadTotal, 
-            percentage: spreadPercentage
-        }
-    }
 
     useEffect(() => {
         getOrderbookSocket(setOrderbook)
