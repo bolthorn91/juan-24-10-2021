@@ -15,6 +15,7 @@ export const getOrderbookSocket = (setOrderbook: Function): WebSocket => {
     ws.onmessage = event => {
         const message: ISocketDataMessage = JSON.parse(event.data);
         if (message.feed === MESSAGE_FEEDS.BOOK_SNAPSHOT && message.numLevels === 25) {
+            message.asks.reverse()
             setOrderbook(message);
         }
     }
