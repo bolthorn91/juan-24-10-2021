@@ -4,8 +4,8 @@ import { App } from './App';
 import { getOrderbookSocket as getOrderbookSocketMocked } from 'domain/orders/getOrderbookSocket';
 
 const mockedOrderbook = {
-    bids: [['::price1::', '::size2::']],
-    asks: [['::price2::', '::size2::']]
+    bids: [[100, 2]],
+    asks: [[101, 1]]
 };
 jest.mock('domain/orders/getOrderbookSocket', () => ({
     getOrderbookSocket: jest.fn()
@@ -24,6 +24,7 @@ describe('App', () => {
             getByText(/Order book/)
         })
         expect(getByText(/Order book/)).toBeInTheDocument();
+        expect(getByText(/Spread/)).toBeInTheDocument();
         expect(getOrderbookSocketMocked).toBeCalledTimes(2);
     });
 })
