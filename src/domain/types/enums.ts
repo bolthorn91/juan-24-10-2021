@@ -12,3 +12,8 @@ export enum MESSAGE_PRODUCT_IDS {
     PI_XBTUSD = 'PI_XBTUSD',
     PI_ETHUSD = 'PI_ETHUSD',
 }
+
+export enum PRICE_COLORS {
+    GREEN = 'green',
+    RED = 'red'
+}

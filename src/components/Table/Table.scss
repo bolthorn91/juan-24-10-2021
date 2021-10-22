@@ -3,11 +3,31 @@
     &__header{
         width: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
+        border-bottom: 1px solid var(--primary-gray);
+
+        &-column{
+            color: var(--primary-gray);
+            font-size: 18px;
+            font-weight: 500;
+        }
     }
+
     &__row{
         display: flex;
         width: 100%;
-        justify-content: space-between;
+        justify-content: space-around;
+
+        &-column{
+            font-weight: 500;
+            padding: 4px 0;
+            color: var(--primary-white);
+            &--green{
+                color: var(--primary-green);
+            }
+            &--red{
+                color: var(--primary-red)
+            }
+        }
     }
 }

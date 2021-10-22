@@ -5,6 +5,7 @@ import { Table } from 'components/Table/Table';
 import { getTableRows } from 'adapters/getTableRows';
 import { calculateSpread } from 'adapters/calculateSpread';
 import { useWindowDimensions } from 'hooks/getWindowDimensions';
+import { PRICE_COLORS } from 'domain/types/enums';
 import './App.scss';
 
 export const App = () => {
@@ -49,15 +50,15 @@ export const App = () => {
                     <div className="app__tables-container">
                         {bids && (
                             <Table 
-                                title="Bids"
                                 rows={bids}
+                                priceColor={PRICE_COLORS.GREEN}
                             />
                         )}
                         {width < 992 && spreadComponent}
                         {asks && (
                             <Table 
-                                title="Asks"
                                 rows={asks}
+                                priceColor={PRICE_COLORS.RED}
                             />
                         )}
                     </div>

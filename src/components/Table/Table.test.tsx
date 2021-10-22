@@ -16,8 +16,8 @@ const bids = [
 describe('Table', () => {
     test('should display 2 rows with price, size and total', () => {
         const { getByText, getAllByText }= render(<Table 
-            title="Bids"
             rows={bids}
+            priceColor={'green' as any}
         />)
         expect(getAllByText(/1/)[0]).toBeInTheDocument()
         expect(getAllByText(/1/).length).toBe(3)

@@ -1,23 +1,26 @@
+import { PRICE_COLORS } from 'domain/types/enums';
 import { ITableRow } from 'domain/types/types';
 import './Table.scss'
 
 interface IProps {
-    title: string;
     rows: ITableRow[]
+    priceColor: PRICE_COLORS;
 }
 
 export const Table = ({
-    title,
-    rows
+    rows,
+    priceColor
 }: IProps) => {
     const headers = ['PRICE', 'SIZE', 'TOTAL'];
 
     return (
         <div className="table">
-            <h1>{title}</h1>
             <div className="table__header">
                 {headers.map(header => (
-                    <h2 key={header}>{header}</h2>
+                    <h2 
+                        key={header}
+                        className="table__header-column"
+                    >{header}</h2>
                 ))}
             </div>
             {rows.map((row, index) => (
@@ -25,9 +28,12 @@ export const Table = ({
                     className="table__row"
                     key={index}
                 >
-                    <p>{row.price}</p>
-                    <p>{row.size}</p>
-                    <p>{row.total}</p>
+                    <p className= {`table__row-column table__row-column--${priceColor}`}
+                    >
+                        {row.price}
+                    </p>
+                    <p className="table__row-column">{row.size}</p>
+                    <p className="table__row-column">{row.total}</p>
                 </div>
             ))}
         </div>
