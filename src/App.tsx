@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { getOrderbookSocket } from './domain/orders/getOrderbookSocket';
-import { IOrderbook, ITableRow } from 'domain/types/types';
+import { ITableRow } from 'domain/types/types';
 import { Table } from 'components/Table/Table';
 import { getTableRows } from 'adapters/getTableRows';
 import { calculateSpread } from 'adapters/calculateSpread';
 import { useWindowDimensions } from 'hooks/getWindowDimensions';
 import { PRICE_COLORS } from 'domain/types/enums';
+import { useAppContext } from 'context/AppContext';
 import './App.scss';
 
 export const App = () => {
     const { width } = useWindowDimensions();
+    const { orderbook, setOrderbook } = useAppContext()
     const isLaptop = width >= 992;
-    const [orderbook, setOrderbook] = useState<IOrderbook | undefined>(undefined)
     const [bids, setBids] = useState<ITableRow[]>([])
     const [asks, setAsks] = useState<ITableRow[]>([])
     const [spread, setSpread] = useState<{total: number, percentage: number}>({total: 0, percentage: 0});
 
     useEffect(() => {
         getOrderbookSocket(setOrderbook)
+    }, [])
+
+    useEffect(() => {
         if (orderbook) {
             const _bids = getTableRows(orderbook.bids);
             const _asks = isLaptop 
