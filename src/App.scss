@@ -35,11 +35,9 @@
   &__tables-container{
     display: flex;
     justify-content: space-between;
-    flex-direction: column;
+    flex-direction: column-reverse;
     @include mobileFirstSize(lg) {
-      flex-direction: initial;
+      flex-direction: row;
     }
   }
 }
-
-

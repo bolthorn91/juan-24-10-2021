@@ -10,6 +10,7 @@ import './App.scss';
 
 export const App = () => {
     const { width } = useWindowDimensions();
+    const isLaptop = width >= 992;
     const [orderbook, setOrderbook] = useState<IOrderbook | undefined>(undefined)
     const [bids, setBids] = useState<ITableRow[]>([])
     const [asks, setAsks] = useState<ITableRow[]>([])
@@ -19,7 +20,7 @@ export const App = () => {
         getOrderbookSocket(setOrderbook)
         if (orderbook) {
             const _bids = getTableRows(orderbook.bids);
-            const _asks = getTableRows(orderbook.asks);
+            const _asks = getTableRows(orderbook.asks); 
             const {total, percentage} = calculateSpread(_bids[0].price, _asks[0].price);
             setBids(_bids);
             setAsks(_asks);
@@ -45,16 +46,17 @@ export const App = () => {
                 <div className="app">
                     <div className="app__title-container">
                         <h1 className="app__title-text">Order book</h1>
-                        {width >= 992 && spreadComponent}
+                        {isLaptop && spreadComponent}
                     </div>
                     <div className="app__tables-container">
                         {bids && (
-                            <Table 
+                            <Table
                                 rows={bids}
                                 priceColor={PRICE_COLORS.GREEN}
+                                headerVisibility={isLaptop}
                             />
                         )}
-                        {width < 992 && spreadComponent}
+                        {!isLaptop && spreadComponent}
                         {asks && (
                             <Table 
                                 rows={asks}
