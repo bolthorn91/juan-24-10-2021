@@ -20,7 +20,9 @@ export const App = () => {
         getOrderbookSocket(setOrderbook)
         if (orderbook) {
             const _bids = getTableRows(orderbook.bids);
-            const _asks = getTableRows(orderbook.asks); 
+            const _asks = isLaptop 
+                ? getTableRows(orderbook.asks)
+                : getTableRows(orderbook.asks).reverse();
             const {total, percentage} = calculateSpread(_bids[0].price, _asks[0].price);
             setBids(_bids);
             setAsks(_asks);
@@ -54,6 +56,7 @@ export const App = () => {
                                 rows={bids}
                                 priceColor={PRICE_COLORS.GREEN}
                                 headerVisibility={isLaptop}
+                                reverseColumns={isLaptop}
                             />
                         )}
                         {!isLaptop && spreadComponent}

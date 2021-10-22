@@ -5,15 +5,42 @@ import './Table.scss'
 interface IProps {
     rows: ITableRow[]
     priceColor: PRICE_COLORS;
-    headerVisibility?: boolean
+    headerVisibility?: boolean;
+    reverseColumns?: boolean;
 }
 
 export const Table = ({
     rows,
     priceColor,
-    headerVisibility = true
+    headerVisibility = true,
+    reverseColumns
 }: IProps) => {
     const headers = ['PRICE', 'SIZE', 'TOTAL'];
+    if (reverseColumns) {
+        headers.reverse();
+    }
+    const rowColumns = (row: ITableRow) => {
+        let orderedRow = Object.values(row)
+        let priceIndex = 0
+        if (reverseColumns) {
+            orderedRow = orderedRow.reverse();
+            priceIndex = 2;
+        }
+        return (
+            <>
+                {orderedRow.map((column, index) => (
+                    <p 
+                        key={index}
+                        className= {`
+                        table__row-column 
+                        ${priceColor && index === priceIndex ? `table__row-column--${priceColor}` : ''}
+                    `}>
+                        {column} 
+                    </p>
+                ))}
+            </>
+        )
+    } 
 
     return (
         <div className="table">
@@ -32,12 +59,7 @@ export const Table = ({
                     className="table__row"
                     key={index}
                 >
-                    <p className= {`table__row-column table__row-column--${priceColor}`}
-                    >
-                        {row.price}
-                    </p>
-                    <p className="table__row-column">{row.size}</p>
-                    <p className="table__row-column">{row.total}</p>
+                    {rowColumns(row)}
                 </div>
             ))}
         </div>
