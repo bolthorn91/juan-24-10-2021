@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getOrderbookSocket } from './domain/orders/getOrderbookSocket';
 import { IOrderbook, ITableRow } from 'domain/types/types';
-import { Table } from 'components/Table';
+import { Table } from 'components/Table/Table';
 import { getTableRows } from 'adapters/getTableRows';
 import { calculateSpread } from 'adapters/calculateSpread';
 import { useWindowDimensions } from 'hooks/getWindowDimensions';
