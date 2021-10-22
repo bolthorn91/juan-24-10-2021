@@ -4,9 +4,11 @@ import { IOrderbook, ITableRow } from 'domain/types/types';
 import { Table } from 'components/Table';
 import { getTableRows } from 'adapters/getTableRows';
 import { calculateSpread } from 'adapters/calculateSpread';
+import { useWindowDimensions } from 'hooks/getWindowDimensions';
 import './App.scss';
 
 export const App = () => {
+    const { width } = useWindowDimensions();
     const [orderbook, setOrderbook] = useState<IOrderbook | undefined>(undefined)
     const [bids, setBids] = useState<ITableRow[]>([])
     const [asks, setAsks] = useState<ITableRow[]>([])
@@ -24,20 +26,23 @@ export const App = () => {
         }
     }, [orderbook])
 
+    const spreadComponent = (
+        <div className="app__spread-container">
+            <p>Spread: </p>
+            {spread && (
+                <>
+                    <p> {spread.total}</p>
+                    <p> ({spread.percentage}%)</p>
+                </>
+            )}
+        </div>
+    )
+
     return (
         <>
             {orderbook && (
                 <div className="app">
-                    <h1>Order book</h1>
-                    <p>Spread:</p>
-                    {spread && (
-                        <>
-                            {' '}
-                            <p>{spread.total}</p>
-                            {' '}
-                            <p>({spread.percentage}%)</p>
-                        </>
-                    )}
+                    {width >= 992 && spreadComponent}
                     <div className="app__tables-container">
                         {bids && (
                             <Table 
@@ -45,6 +50,7 @@ export const App = () => {
                                 rows={bids}
                             />
                         )}
+                        {width < 992 && spreadComponent}
                         {asks && (
                             <Table 
                                 title="Asks"
