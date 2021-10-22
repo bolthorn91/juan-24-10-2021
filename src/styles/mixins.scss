@@ -1,0 +1,19 @@
+$small-mobile: 320px;
+$mobile: 480px;
+$portrait-tablet: 600px;
+$tablet: 801px;
+$small-laptop: 992px;
+$laptop: 1025px;
+$desktop: 1281px;
+
+@mixin mobileFirstSize($size) {
+  @if $size==xs {
+    @media only screen and (min-width: $small-mobile) {
+      @content;
+    }
+  } @else if $size==lg {
+    @media only screen and (min-width: $small-laptop) {
+      @content;
+    }
+  }
+}
