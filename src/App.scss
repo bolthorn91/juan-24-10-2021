@@ -1,13 +1,45 @@
+@import 'src/styles/mixins';
+
 .app {
-  text-align: center;
-  &__container{
+  background-color: var(--primary-blue);
+  width: 100%;
+  height: 100%;
+
+  &__title-container{
     width: 100%;
-    height: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-gray);
+  }
+
+  &__title-text{
+    font-size: 16px;
+    color: var(--primary-white);
+    @include mobileFirstSize(lg) {
+      font-size: 18px;
+    }
+  }
+
+  &__spread-container{
+    display: flex;
+    color: var(--primary-gray);
+    justify-content: center;
+    padding: 15px 0;
+    @include mobileFirstSize(lg) {
+      padding: 0;
+      left: 50%;
+      position: absolute;
+    }
   }
 
   &__tables-container{
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
+    @include mobileFirstSize(lg) {
+      flex-direction: initial;
+    }
   }
 }
+
 

@@ -42,7 +42,10 @@ export const App = () => {
         <>
             {orderbook && (
                 <div className="app">
-                    {width >= 992 && spreadComponent}
+                    <div className="app__title-container">
+                        <h1 className="app__title-text">Order book</h1>
+                        {width >= 992 && spreadComponent}
+                    </div>
                     <div className="app__tables-container">
                         {bids && (
                             <Table 
