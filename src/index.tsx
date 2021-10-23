@@ -6,6 +6,16 @@ import './styles/mixins.scss'
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { AppProvider } from 'context/AppContext';
+import { initializeApp } from 'firebase/app';
+const firebaseConfig = {
+    apiKey: 'AIzaSyB-XBu795Mu-LYpLRJbR0KrhBXabnU7XCg',
+    authDomain: 'juan-test-1f3ad.firebaseapp.com',
+    projectId: 'juan-test-1f3ad',
+    storageBucket: 'juan-test-1f3ad.appspot.com',
+    messagingSenderId: '991218275271',
+    appId: '1:991218275271:web:a5716876b761e3f54fbfe2'
+};
+initializeApp(firebaseConfig);
 
 ReactDOM.render(
     <React.StrictMode>
