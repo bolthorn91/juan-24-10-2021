@@ -1,14 +1,15 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { App } from './App';
-import { getOrderbookSocket as getOrderbookSocketMocked } from 'domain/orders/getOrderbookSocket';
+import { OrderbookSocket as OrderbookSocketMocked } from 'domain/orders/OrderbookSocket';
+import { AppProvider } from 'context/AppContext';
 
 const mockedOrderbook = {
     bids: [[100, 2]],
     asks: [[101, 1]]
 };
-jest.mock('domain/orders/getOrderbookSocket', () => ({
-    getOrderbookSocket: jest.fn()
+jest.mock('domain/orders/OrderbookSocket', () => ({
+    OrderbookSocket: jest.fn()
 }))
 
 afterAll(() => {
@@ -17,15 +18,19 @@ afterAll(() => {
 
 describe('App', () => {
     test('should render order book title', async() => {
-        (getOrderbookSocketMocked as jest.Mock)
+        (OrderbookSocketMocked as jest.Mock)
             .mockImplementation(setOrderbook => setOrderbook(mockedOrderbook))
-        const { getByText } = render(<App />);
+        const { getByText } = render(
+            <AppProvider>
+                <App />
+            </AppProvider>
+        );
         await waitFor(() => {
             getByText(/Order book/)
         })
         expect(getByText(/Order book/)).toBeInTheDocument();
         expect(getByText(/Spread/)).toBeInTheDocument();
-        expect(getOrderbookSocketMocked).toBeCalledTimes(2);
+        expect(OrderbookSocketMocked).toBeCalledTimes(1);
     });
 })
 
