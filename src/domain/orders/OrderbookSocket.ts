@@ -8,13 +8,38 @@ export class OrderbookSocket {
         feed: MESSAGE_FEEDS.BOOK,
         product_ids: [MESSAGE_PRODUCT_IDS.PI_XBTUSD]
     };
-    ws: WebSocket;
+    ws: WebSocket |undefined;
     orderbook: IOrderbook | undefined;
+
     constructor(setOrderbook: Function) {
+        this.initializeSocket(setOrderbook);
+    }
+
+    changeSocket(): void {
+        const unsubscribeMessage: ISubscribeOrderbookDTO = {
+            ...this.wsMessage,
+            event: MESSAGE_EVENTS.UNSUBSCRIBE
+        }
+        this.wsMessage = {...unsubscribeMessage};
+        this.ws?.send(JSON.stringify(this.wsMessage));
+        const product_ids = this.wsMessage.product_ids[0] === MESSAGE_PRODUCT_IDS.PI_XBTUSD
+            ? [MESSAGE_PRODUCT_IDS.PI_ETHUSD]
+            : [MESSAGE_PRODUCT_IDS.PI_XBTUSD]
+        const newSubscribeMessage: ISubscribeOrderbookDTO = {
+            ...this.wsMessage,
+            event: MESSAGE_EVENTS.SUBSCRIBE,
+            product_ids
+        }
+        this.wsMessage = {...newSubscribeMessage};
+        this.ws?.send(JSON.stringify(this.wsMessage))
+        return;
+    }
+
+    private initializeSocket(setOrderbook: Function) {
         this.ws = new WebSocket('wss://www.cryptofacilities.com/ws/v1');
         this.ws.onopen = () => {
-            this.ws.send(JSON.stringify(this.wsMessage));
-        } 
+            this.ws?.send(JSON.stringify(this.wsMessage))
+        }
         this.ws.onmessage = event => {
             const message: ISocketDataMessage = JSON.parse(event.data);
             if (message.feed === MESSAGE_FEEDS.BOOK_SNAPSHOT && message.numLevels === 25) {
@@ -70,5 +95,4 @@ export class OrderbookSocket {
             }
         }
     }
-
 }

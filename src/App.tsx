@@ -16,9 +16,10 @@ export const App = () => {
     const [bids, setBids] = useState<ITableRow[]>([])
     const [asks, setAsks] = useState<ITableRow[]>([])
     const [spread, setSpread] = useState<{total: number, percentage: number}>({total: 0, percentage: 0});
+    const [ws, setWs] = useState<OrderbookSocket | undefined>(undefined)
 
     useEffect(() => {
-        new OrderbookSocket(setOrderbook)
+        setWs(new OrderbookSocket(setOrderbook));
     }, [])
 
     useEffect(() => {
@@ -53,6 +54,10 @@ export const App = () => {
                     <div className="app__title-container">
                         <h1 className="app__title-text">Order book</h1>
                         {isLaptop && spreadComponent}
+                        <button 
+                            className="app_button"
+                            onClick={() => ws?.changeSocket()}
+                        >Toggle feed</button>
                     </div>
                     <div className="app__tables-container">
                         {bids && (
