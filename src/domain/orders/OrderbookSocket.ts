@@ -10,8 +10,11 @@ export class OrderbookSocket {
     };
     ws: WebSocket |undefined;
     orderbook: IOrderbook | undefined;
+    message: ISocketDataMessage | undefined;
+    setOrderbook: Function;
 
     constructor(setOrderbook: Function) {
+        this.setOrderbook = setOrderbook;
         this.initializeSocket(setOrderbook);
     }
 
@@ -38,26 +41,21 @@ export class OrderbookSocket {
     initializeSocket(setOrderbook: Function) {
         this.ws = new WebSocket('wss://www.cryptofacilities.com/ws/v1');
         this.ws.onopen = () => {
-            this.ws?.send(JSON.stringify(this.wsMessage))
+            this.ws?.send(JSON.stringify(this.wsMessage));
         }
         this.ws.onmessage = event => {
             const message: ISocketDataMessage = JSON.parse(event.data);
+            this.message = message;
             if (message.feed === MESSAGE_FEEDS.BOOK_SNAPSHOT && message.numLevels === 25) {
                 message.asks.reverse();
                 setOrderbook(message);
                 this.orderbook = message;
             }
-            this.throttle(() => {
-                if (message.feed === MESSAGE_FEEDS.BOOK && this.orderbook) {
-                    this.orderbook = this.handleSocketMessage(message, this.orderbook!)
-                }
-                setOrderbook(this.orderbook)
-
-            }, 300)
+            this.handleSocketMessage();
         }
     }
 
-    private handleSocketMessage(message: ISocketDataMessage, orderbook: IOrderbook): IOrderbook {
+    private handleSocketMessage(): void {
         const updateOrderbook = (messageOrders: number[][], orderbookOrders: number[][]): number[][] => {
             messageOrders.forEach(messageOrder => {
                 const orderbookIndex = orderbookOrders.findIndex(order => order[0] === messageOrder[0])
@@ -72,27 +70,16 @@ export class OrderbookSocket {
                 orderbookOrders.push(messageOrder);
             })
             return orderbookOrders;
+        }
 
-        }
-        if (message.asks && message.asks.length > 0) {
-            orderbook.asks = updateOrderbook(message.asks, orderbook.asks);
-        }
-        if (message.bids && message.bids.length > 0) {
-            orderbook.bids = updateOrderbook(message.bids, orderbook.bids);
-        }
-        return orderbook;
-    }
-
-    private throttle(callback: Function, limit: number) {
-        var waiting = false;
-        return (...args: any[]) => {
-            if (!waiting) {
-                callback(...args);
-                waiting = true;
-                setTimeout(function () {
-                    waiting = false;
-                }, limit);
+        if (this.message!.feed === MESSAGE_FEEDS.BOOK && this.orderbook) {
+            if (this.message!.asks && this.message!.asks.length > 0) {
+                this.orderbook.asks = updateOrderbook(this.message!.asks, this.orderbook.asks);
             }
+            if (this.message!.bids && this.message!.bids.length > 0) {
+                this.orderbook.bids = updateOrderbook(this.message!.bids, this.orderbook.bids);
+            }
+            this.setOrderbook({...this.orderbook})
         }
     }
 }
