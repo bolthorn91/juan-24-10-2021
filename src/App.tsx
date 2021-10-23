@@ -11,15 +11,15 @@ import './App.scss';
 
 export const App = () => {
     const { width } = useWindowDimensions();
-    const { orderbook, setOrderbook } = useAppContext()
+    use
+    const { orderbook, setOrderbook, webSocket, setWebSocket } = useAppContext()
     const isLaptop = width >= 992;
     const [bids, setBids] = useState<ITableRow[]>([])
     const [asks, setAsks] = useState<ITableRow[]>([])
     const [spread, setSpread] = useState<{total: number, percentage: number}>({total: 0, percentage: 0});
-    const [ws, setWs] = useState<OrderbookSocket | undefined>(undefined)
 
     useEffect(() => {
-        setWs(new OrderbookSocket(setOrderbook));
+        setWebSocket(new OrderbookSocket(setOrderbook));
     }, [])
 
     useEffect(() => {
@@ -56,7 +56,7 @@ export const App = () => {
                         {isLaptop && spreadComponent}
                         <button 
                             className="app__button"
-                            onClick={() => ws?.changeSocket()}
+                            onClick={() => webSocket.changeSocket()}
                         >
                             Toggle Feed
                         </button>

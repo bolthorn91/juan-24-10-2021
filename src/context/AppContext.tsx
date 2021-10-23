@@ -1,9 +1,10 @@
+import { OrderbookSocket } from 'domain/orders/OrderbookSocket';
 import { IOrderbook, ISocketDataMessage } from 'domain/types/types';
 import * as React from 'react';
 
 interface AppValueContext {
-    webSocket: WebSocket;
-    setWebSocket: () => void;
+    webSocket: OrderbookSocket;
+    setWebSocket: (ws: OrderbookSocket) => void;
     orderbook: IOrderbook;
     setOrderbook: (message: ISocketDataMessage) => void;
 }
@@ -15,7 +16,7 @@ interface IProps {
 }
 
 const AppProvider = ({ children }: IProps) => {
-    const [webSocket, setWebSocket] = React.useState<WebSocket | undefined>(undefined);
+    const [webSocket, setWebSocket] = React.useState<OrderbookSocket | undefined>(undefined);
     const [orderbook, setOrderbook] = React.useState<IOrderbook | undefined>(undefined);
 
     const value = {
