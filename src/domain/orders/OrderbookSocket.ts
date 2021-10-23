@@ -57,17 +57,25 @@ export class OrderbookSocket {
 
     private handleSocketMessage(): void {
         const updateOrderbook = (messageOrders: number[][], orderbookOrders: number[][]): number[][] => {
-            messageOrders.forEach(messageOrder => {
-                const orderbookIndex = orderbookOrders.findIndex(order => order[0] === messageOrder[0])
+            messageOrders.map(messageOrder => {
+                const orderbookIndex = orderbookOrders.findIndex(order => order[0] === messageOrder[0]);
                 if (orderbookIndex && orderbookIndex > -1) {
                     if (messageOrder[1] === 0) {
                         orderbookOrders.splice(orderbookIndex, 1);
                         return;
                     }
-                    orderbookOrders[orderbookIndex] = messageOrder
+                    orderbookOrders[orderbookIndex] = messageOrder;
                     return;
                 }
-                orderbookOrders.push(messageOrder);
+                if (messageOrder[1] === 0) {
+                    return;
+                }
+                if (orderbookOrders.length >= 25) {
+                    orderbookOrders.pop()
+                    orderbookOrders.push(messageOrder);
+                    return;
+                }
+                orderbookOrders.push(messageOrder)
             })
             return orderbookOrders;
         }
@@ -79,7 +87,7 @@ export class OrderbookSocket {
             if (this.message!.bids && this.message!.bids.length > 0) {
                 this.orderbook.bids = updateOrderbook(this.message!.bids, this.orderbook.bids);
             }
-            this.setOrderbook({...this.orderbook})
+            this.setOrderbook(JSON.parse(JSON.stringify(this.orderbook)))
         }
     }
 }
