@@ -1,6 +1,7 @@
 import { ISubscribeOrderbookDTO } from 'domain/types/dto';
 import { MESSAGE_EVENTS, MESSAGE_FEEDS, MESSAGE_PRODUCT_IDS } from 'domain/types/enums';
 import { IOrderbook, ISocketDataMessage } from 'domain/types/types';
+// import _ from 'underscore';
 
 export class OrderbookSocket {
     wsMessage: ISubscribeOrderbookDTO = {
@@ -12,6 +13,7 @@ export class OrderbookSocket {
     orderbook: IOrderbook | undefined;
     message: ISocketDataMessage | undefined;
     setOrderbook: Function;
+    waiting = false;
 
     constructor(setOrderbook: Function) {
         this.setOrderbook = setOrderbook;
@@ -51,7 +53,7 @@ export class OrderbookSocket {
                 setOrderbook(message);
                 this.orderbook = message;
             }
-            this.handleSocketMessage();
+            this.throttle(() => this.handleSocketMessage(), 40);
         }
     }
 
@@ -88,6 +90,16 @@ export class OrderbookSocket {
                 this.orderbook.bids = updateOrderbook(this.message!.bids, this.orderbook.bids);
             }
             this.setOrderbook(JSON.parse(JSON.stringify(this.orderbook)))
+        }
+    }
+
+    private throttle(callback: Function, limit: number) {
+        if (!this.waiting) {
+            callback();
+            this.waiting = true;
+            setTimeout(() => {
+                this.waiting = false;
+            }, limit);
         }
     }
 }
