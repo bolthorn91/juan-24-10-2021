@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getOrderbookSocket } from './domain/orders/getOrderbookSocket';
+import { OrderbookSocket } from './domain/orders/OrderbookSocket';
 import { ITableRow } from 'domain/types/types';
 import { Table } from 'components/Table/Table';
 import { getTableRows } from 'adapters/getTableRows';
@@ -18,7 +18,7 @@ export const App = () => {
     const [spread, setSpread] = useState<{total: number, percentage: number}>({total: 0, percentage: 0});
 
     useEffect(() => {
-        getOrderbookSocket(setOrderbook)
+        new OrderbookSocket(setOrderbook)
     }, [])
 
     useEffect(() => {
