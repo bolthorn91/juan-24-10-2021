@@ -55,9 +55,11 @@ export const App = () => {
                         <h1 className="app__title-text">Order book</h1>
                         {isLaptop && spreadComponent}
                         <button 
-                            className="app_button"
+                            className="app__button"
                             onClick={() => ws?.changeSocket()}
-                        >Toggle feed</button>
+                        >
+                            Toggle Feed
+                        </button>
                     </div>
                     <div className="app__tables-container">
                         {bids && (

@@ -9,6 +9,7 @@
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border-bottom: 2px solid var(--primary-gray);
   }
 
@@ -27,8 +28,6 @@
     padding: 15px 0;
     @include mobileFirstSize(lg) {
       padding: 0;
-      left: 50%;
-      position: absolute;
     }
   }
 
@@ -39,5 +38,14 @@
     @include mobileFirstSize(lg) {
       flex-direction: row;
     }
+  }
+
+  &__button{
+    border: none;
+    border-radius: 5px;
+    padding: 6px 15px;
+    color: var(--secondary-white);
+    background-color: var(--secondary-blue);
+    font-weight: 600;
   }
 }
