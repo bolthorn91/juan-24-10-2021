@@ -35,7 +35,7 @@ export class OrderbookSocket {
         return;
     }
 
-    private initializeSocket(setOrderbook: Function) {
+    initializeSocket(setOrderbook: Function) {
         this.ws = new WebSocket('wss://www.cryptofacilities.com/ws/v1');
         this.ws.onopen = () => {
             this.ws?.send(JSON.stringify(this.wsMessage))

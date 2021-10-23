@@ -7,11 +7,12 @@ import { calculateSpread } from 'adapters/calculateSpread';
 import { useWindowDimensions } from 'hooks/getWindowDimensions';
 import { PRICE_COLORS } from 'domain/types/enums';
 import { useAppContext } from 'context/AppContext';
+import { useWindowFocus } from 'hooks/getWindowFocus';
 import './App.scss';
 
 export const App = () => {
     const { width } = useWindowDimensions();
-    use
+    useWindowFocus();
     const { orderbook, setOrderbook, webSocket, setWebSocket } = useAppContext()
     const isLaptop = width >= 992;
     const [bids, setBids] = useState<ITableRow[]>([])
