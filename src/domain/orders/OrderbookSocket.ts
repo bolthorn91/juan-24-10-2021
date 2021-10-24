@@ -1,7 +1,6 @@
 import { ISubscribeOrderbookDTO } from 'domain/types/dto';
 import { MESSAGE_EVENTS, MESSAGE_FEEDS, MESSAGE_PRODUCT_IDS } from 'domain/types/enums';
 import { IOrderbook, ISocketDataMessage } from 'domain/types/types';
-// import _ from 'underscore';
 
 export class OrderbookSocket {
     wsMessage: ISubscribeOrderbookDTO = {
@@ -49,7 +48,6 @@ export class OrderbookSocket {
             const message: ISocketDataMessage = JSON.parse(event.data);
             this.message = message;
             if (message.feed === MESSAGE_FEEDS.BOOK_SNAPSHOT && message.numLevels === 25) {
-                message.asks.reverse();
                 setOrderbook(message);
                 this.orderbook = message;
             }
@@ -58,39 +56,43 @@ export class OrderbookSocket {
     }
 
     private handleSocketMessage(): void {
-        const updateOrderbook = (messageOrders: number[][], orderbookOrders: number[][]): number[][] => {
-            messageOrders.map(messageOrder => {
-                const orderbookIndex = orderbookOrders.findIndex(order => order[0] === messageOrder[0]);
-                if (orderbookIndex && orderbookIndex > -1) {
-                    if (messageOrder[1] === 0) {
-                        orderbookOrders.splice(orderbookIndex, 1);
-                        return;
-                    }
-                    orderbookOrders[orderbookIndex] = messageOrder;
-                    return;
-                }
-                if (messageOrder[1] === 0) {
-                    return;
-                }
-                if (orderbookOrders.length >= 25) {
-                    orderbookOrders.pop()
-                    orderbookOrders.push(messageOrder);
-                    return;
-                }
-                orderbookOrders.push(messageOrder)
-            })
-            return orderbookOrders;
-        }
-
         if (this.message!.feed === MESSAGE_FEEDS.BOOK && this.orderbook) {
             if (this.message!.asks && this.message!.asks.length > 0) {
-                this.orderbook.asks = updateOrderbook(this.message!.asks, this.orderbook.asks);
+                const orders = this.updateOrderbook(this.message!.asks, this.orderbook.asks)
+                    .sort((a, b) => b[0] - a[0])
+                this.orderbook.asks = orders;
             }
             if (this.message!.bids && this.message!.bids.length > 0) {
-                this.orderbook.bids = updateOrderbook(this.message!.bids, this.orderbook.bids);
+                const orders = this.updateOrderbook(this.message!.bids, this.orderbook.bids)
+                    .sort((a, b) => b[0] - a[0]);
+                this.orderbook.bids = orders;
             }
             this.setOrderbook(JSON.parse(JSON.stringify(this.orderbook)))
         }
+    }
+
+    private updateOrderbook(messageOrders: number[][], orderbookOrders: number[][]): number[][] {
+        messageOrders.map(messageOrder => {
+            const orderbookIndex = orderbookOrders.findIndex(order => order[0] === messageOrder[0]);
+            if (orderbookIndex && orderbookIndex > -1) {
+                if (messageOrder[1] === 0) {
+                    orderbookOrders.splice(orderbookIndex, 1);
+                    return;
+                }
+                orderbookOrders[orderbookIndex] = messageOrder;
+                return;
+            }
+            if (messageOrder[1] === 0) {
+                return;
+            }
+            if (orderbookOrders.length >= 25) {
+                orderbookOrders.pop();
+                orderbookOrders.push(messageOrder);
+                return;
+            }
+            orderbookOrders.push(messageOrder)
+        })
+        return orderbookOrders;
     }
 
     private throttle(callback: Function, limit: number) {
