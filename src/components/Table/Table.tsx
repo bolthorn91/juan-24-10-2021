@@ -42,6 +42,12 @@ export const Table = ({
         )
     } 
 
+    const calculateBackgroundWidth = (row: ITableRow): string => {
+        const total = rows.reduce((acc, current) => Math.max(acc, current.total), 0);
+        const rowPercentage = Math.round(((row.total * 100) / total)).toString() + '%';
+        return rowPercentage;
+    }
+
     return (
         <div className="table">
             {headerVisibility && (
@@ -55,10 +61,19 @@ export const Table = ({
                 </div>
             )}
             {rows.map((row, index) => (
-                <div 
-                    className="table__row"
-                    key={index}
-                >
+                <div className="table__row" key={index}>
+                    <div
+                        style={{width: calculateBackgroundWidth(row)}}
+                        className={`
+                            table__row-background
+                            ${priceColor === PRICE_COLORS.GREEN 
+                    ? 'table__row-background--green' 
+                    : 'table__row-background--red'}
+                            ${priceColor === PRICE_COLORS.GREEN && !reverseColumns
+                    ? 'table__row-background--left' 
+                    : ''}
+                    `}>
+                    </div>
                     {rowColumns(row)}
                 </div>
             ))}

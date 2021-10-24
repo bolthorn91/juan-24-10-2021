@@ -17,11 +17,32 @@
         display: flex;
         width: 100%;
         justify-content: space-around;
+        position: relative;
+        
+        &-background {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            &--green{
+                right: 0;
+                background-color: var(--secondary-green);
+            }
+    
+            &--red{
+                left: 0;
+                background-color: var(--secondary-red);
+            }
+            &--left{
+                left:0
+            }
+        }
 
         &-column{
             font-weight: 500;
             padding: 4px 0;
             color: var(--primary-white);
+            position: relative;
+            z-index: 1;
             &--green{
                 color: var(--primary-green);
             }
